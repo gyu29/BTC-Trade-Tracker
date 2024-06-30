@@ -45,7 +45,8 @@ python main.py
 
 ## Preview
 
-![Preview](https://github.com/gyu29/BTC-Trade-Tracker/assets/112839874/5183ed13-b797-4891-ac8b-3f57c0bd1cc2)
+![Preview](https://github.com/gyu29/BTC-Trade-Tracker/assets/112839874/7000a508-d2c0-4f3e-9bcc-60469d236e50)
+
 
 
 ## License
