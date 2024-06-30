@@ -40,5 +40,8 @@ python main.py
 * plotly
 * yfinance
 
+* Implementing paper trading at 50 stars
+* Implementing integration with real brokers at 100 stars
+
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
