@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 def fetch_bitcoin_data():
     end_date = datetime.now()
-    start_date = end_date - timedelta(days=7)  # Fetch 7 days of data
+    start_date = end_date - timedelta(days=7) 
     btc = yf.Ticker("BTC-USD")
     data = btc.history(start=start_date, end=end_date, interval="5m")
     return data
@@ -46,7 +46,6 @@ def calculate_signals(data):
         else:
             data.loc[data.index[i], 'trend'] = data.iloc[i-1]['trend']
     
-    # Apply 3-candle consistency rule for entry signals
     for i in range(3, len(data)):
         if (data.iloc[i]['trend'] == 1 and 
             data.iloc[i-1]['trend'] == 1 and 
@@ -92,7 +91,6 @@ def create_chart(data):
     fig = make_subplots(rows=1, cols=2, column_widths=[0.8, 0.2], 
                         specs=[[{"type": "candlestick"}, {"type": "table"}]])
     
-    # Candlestick chart
     fig.add_trace(go.Candlestick(x=data.index,
                                  open=data['Open'],
                                  high=data['High'],
@@ -101,22 +99,19 @@ def create_chart(data):
                                  name="BTC-USD"),
                   row=1, col=1)
     
-    # Add buy signals
     buy_signals = data[data['signal'] == 'BUY']
     fig.add_trace(go.Scatter(x=buy_signals.index, y=buy_signals['Low'],
                              mode='markers', marker=dict(symbol='triangle-up', size=10, color='green'),
                              name='Buy Signal'),
                   row=1, col=1)
     
-    # Add sell signals
     sell_signals = data[data['signal'] == 'SELL']
     fig.add_trace(go.Scatter(x=sell_signals.index, y=sell_signals['High'],
                              mode='markers', marker=dict(symbol='triangle-down', size=10, color='red'),
                              name='Sell Signal'),
                   row=1, col=1)
     
-    # Signal table
-    signals = data[data['signal'] != ''].iloc[-20:]  # Show last 20 signals
+    signals = data[data['signal'] != ''].iloc[-20:]
     fig.add_trace(go.Table(
         header=dict(values=['Time', 'Signal'],
                     fill_color='paleturquoise',
