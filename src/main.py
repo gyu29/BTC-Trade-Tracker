@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 def fetch_bitcoin_data():
     end_date = datetime.now()
-    start_date = end_date - timedelta(days=7) 
+    start_date = end_date - timedelta(days=7)
     btc = yf.Ticker("BTC-USD")
     data = btc.history(start=start_date, end=end_date, interval="5m")
     return data
@@ -89,7 +89,7 @@ def calculate_profit_loss(data):
 
 def create_chart(data):
     fig = make_subplots(rows=1, cols=2, column_widths=[0.8, 0.2], 
-                        specs=[[{"type": "candlestick"}, {"type": "table"}]])
+                        specs=[[{"type": "candlestick", "secondary_y": True}, {"type": "table"}]])
     
     fig.add_trace(go.Candlestick(x=data.index,
                                  open=data['Open'],
@@ -97,19 +97,24 @@ def create_chart(data):
                                  low=data['Low'],
                                  close=data['Close'],
                                  name="BTC-USD"),
-                  row=1, col=1)
+                  row=1, col=1, secondary_y=False)
     
     buy_signals = data[data['signal'] == 'BUY']
     fig.add_trace(go.Scatter(x=buy_signals.index, y=buy_signals['Low'],
                              mode='markers', marker=dict(symbol='triangle-up', size=10, color='green'),
                              name='Buy Signal'),
-                  row=1, col=1)
+                  row=1, col=1, secondary_y=False)
     
     sell_signals = data[data['signal'] == 'SELL']
     fig.add_trace(go.Scatter(x=sell_signals.index, y=sell_signals['High'],
                              mode='markers', marker=dict(symbol='triangle-down', size=10, color='red'),
                              name='Sell Signal'),
-                  row=1, col=1)
+                  row=1, col=1, secondary_y=False)
+    
+    fig.add_trace(go.Scatter(x=data.index, y=data['Close'],
+                             mode='lines', line=dict(color='rgba(0,0,0,0)'),
+                             showlegend=False, hoverinfo='skip'),
+                  row=1, col=1, secondary_y=True)
     
     signals = data[data['signal'] != ''].iloc[-20:]
     fig.add_trace(go.Table(
@@ -124,7 +129,11 @@ def create_chart(data):
     fig.update_layout(title='Bitcoin Price with Buy/Sell Signals (5-minute timeframe)',
                       xaxis_title='Date',
                       yaxis_title='Price (USD)',
-                      height=800)
+                      height=800,
+                      yaxis2=dict(title='Price Scale', side='right', overlaying='y'))
+    
+    fig.update_yaxes(title_text="Price (USD)", secondary_y=False)
+    fig.update_yaxes(title_text="Price Scale", secondary_y=True)
     
     return fig
 
