@@ -43,5 +43,10 @@ python main.py
 * Implementing paper trading at 50 stars
 * Implementing integration with real brokers at 100 stars
 
+## Preview
+
+![Preview](https://github.com/gyu29/BTC-Trade-Tracker/assets/112839874/5183ed13-b797-4891-ac8b-3f57c0bd1cc2)
+
+
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
